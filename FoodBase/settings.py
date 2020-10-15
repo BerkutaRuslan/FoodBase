@@ -1,7 +1,10 @@
 import os
 
+from dotenv import load_dotenv
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+load_dotenv(os.path.join(BASE_DIR, 'FoodBase/.env')),
 SECRET_KEY = os.environ.get('SECRET_KEY'),
 
 DEBUG = True
@@ -18,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'news',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +80,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Europe/Kiev'
 
 TIME_ZONE = 'UTC'
 
@@ -87,4 +91,9 @@ USE_L10N = True
 USE_TZ = True
 
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
+UPLOAD_DIR = MEDIA_ROOT
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '../../static')
