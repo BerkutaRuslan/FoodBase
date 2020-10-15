@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HOST = os.environ.get('HOST')
 
 load_dotenv(os.path.join(BASE_DIR, 'FoodBase/.env')),
 SECRET_KEY = os.environ.get('SECRET_KEY'),
@@ -14,15 +15,24 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+THIRD_PARTY_APPS = [
+    'rest_framework',
+]
+
+LOCAL_APPS = [
     'news',
 ]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,7 +92,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 TIME_ZONE = 'Europe/Kiev'
 
-TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -97,3 +106,6 @@ UPLOAD_DIR = MEDIA_ROOT
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '../../static')
+
+import django_heroku
+django_heroku.settings(locals())
