@@ -26,6 +26,7 @@ class RestaurantAdmin(admin.ModelAdmin):
             )
 
 
+@admin.register(RestaurantContacts)
 class MyModelAdmin(admin.ModelAdmin, DynamicArrayMixin):
     fieldsets = (
         (None, {
@@ -33,6 +34,3 @@ class MyModelAdmin(admin.ModelAdmin, DynamicArrayMixin):
         }),
     )
     pass
-
-
-admin.site.register(RestaurantContacts, MyModelAdmin)
