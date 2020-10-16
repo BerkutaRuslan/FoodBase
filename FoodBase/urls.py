@@ -6,6 +6,7 @@ from FoodBase import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('news/', include('news.urls')),
+    path('home/', include('restaurant.urls')),
 ]
 
 if settings.DEBUG:
