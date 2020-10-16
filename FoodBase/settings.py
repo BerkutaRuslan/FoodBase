@@ -111,3 +111,6 @@ STATIC_URL = "/static/"
 
 # Map settings
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
+
+import django_heroku
+django_heroku.settings(locals())
