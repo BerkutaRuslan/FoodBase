@@ -33,6 +33,7 @@ LOCAL_APPS = [
     'news',
     'restaurant',
     'menu',
+    'accounts',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
