@@ -43,8 +43,11 @@ class Dish(models.Model):
 class Drink(models.Model):
     name = models.CharField(max_length=150)
     photo = models.ImageField(upload_to='drinks')
-    bottle_volume = models.CharField(max_length=150, choices='volume_choice')
+    bottle_volume = models.CharField(max_length=150, choices=volume_choice)
     price = models.FloatField()
+
+    def __str__(self):
+        return self.name
 
 
 class MenuOfDay(models.Model):
