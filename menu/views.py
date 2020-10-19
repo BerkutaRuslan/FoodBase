@@ -11,8 +11,13 @@ class ListAllDrinksView(generics.ListAPIView):
     serializer_class = DrinkSerializer
 
     def get_queryset(self):
+        drinks = Drink.objects.all()
         query_bottle_volume = self.request.GET.get("bottle_volume")
+        min_price = self.request.query_params.get('min_price')
+        max_price = self.request.query_params.get('max_price')
         if query_bottle_volume:
-            return Drink.objects.filter(bottle_volume=query_bottle_volume)
-        else:
-            return Drink.objects.all()
+            drinks = Drink.objects.filter(bottle_volume=query_bottle_volume)
+        if min_price and max_price:
+            drinks = Drink.objects.filter(price__range=[min_price, max_price])
+        return drinks
+
