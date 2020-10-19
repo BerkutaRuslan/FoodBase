@@ -16,8 +16,8 @@ class ListAllDrinksView(generics.ListAPIView):
         min_price = self.request.query_params.get('min_price')
         max_price = self.request.query_params.get('max_price')
         if query_bottle_volume:
-            drinks = Drink.objects.filter(bottle_volume=query_bottle_volume)
+            drinks = drinks.filter(bottle_volume=query_bottle_volume)
         if min_price and max_price:
-            drinks = Drink.objects.filter(price__range=[min_price, max_price])
+            drinks = drinks.filter(price__range=[min_price, max_price])
         return drinks
 
