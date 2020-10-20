@@ -32,6 +32,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'news',
     'restaurant',
+    'menu',
+    'accounts',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -111,6 +113,3 @@ STATIC_URL = "/static/"
 
 # Map settings
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
-
-import django_heroku
-django_heroku.settings(locals())
