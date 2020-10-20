@@ -56,5 +56,8 @@ class MenuOfDay(models.Model):
     dish = models.ForeignKey(Dish, related_name='DayDish', on_delete=models.CASCADE)
     drink = models.ForeignKey(Drink, related_name='Drink', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.dish.name, self.drink.name, self.price
+
     class Meta:
         verbose_name_plural = 'Menu of day'
