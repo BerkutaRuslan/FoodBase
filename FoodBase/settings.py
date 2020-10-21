@@ -116,6 +116,13 @@ STATIC_URL = "/static/"
 # Map settings
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
+    }
+}
+
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ['application/json']
@@ -129,3 +136,6 @@ CELERY_BEAT_SCHEDULE = {
          'schedule': crontab(minute='*'),
         },
 }
+
+import django_heroku
+django_heroku.settings(locals())
