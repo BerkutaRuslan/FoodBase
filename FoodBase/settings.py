@@ -1,6 +1,8 @@
 import os
 
 from dotenv import load_dotenv
+from celery.schedules import crontab
+from FoodBase.celery import app
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = os.environ.get('HOST')
@@ -113,3 +115,17 @@ STATIC_URL = "/static/"
 
 # Map settings
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Kiev'
+app.conf.enable_utc = False
+CELERY_BEAT_SCHEDULE = {
+    'create_menu_of_day': {
+         'task': 'menu.tasks.create_menu_of_day',
+         'schedule': crontab(minute='*'),
+        },
+}
