@@ -119,7 +119,7 @@ GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 CACHES = {
     "default": {
          "BACKEND": "redis_cache.RedisCache",
-         "LOCATION": os.environ.get('REDIS_URL'),
+         "LOCATION": os.environ.get('REDIS_PROVIDER'),
     }
 }
 
@@ -133,6 +133,6 @@ app.conf.enable_utc = False
 CELERY_BEAT_SCHEDULE = {
     'create_menu_of_day': {
          'task': 'menu.tasks.create_menu_of_day',
-         'schedule': crontab(minute='*'),
+         'schedule': crontab(minute='5'),
         },
 }
