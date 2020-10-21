@@ -136,6 +136,3 @@ CELERY_BEAT_SCHEDULE = {
          'schedule': crontab(minute='*'),
         },
 }
-
-import django_heroku
-django_heroku.settings(locals())
