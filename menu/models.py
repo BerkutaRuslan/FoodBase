@@ -51,7 +51,7 @@ class Drink(models.Model):
 
 
 class MenuOfDay(models.Model):
-    expire = models.DateField(default=get_expire_date,)
+    expire = models.DateField(default=get_expire_date)
     price = models.FloatField()
     dish = models.ForeignKey(Dish, related_name='DayDish', on_delete=models.CASCADE)
     drink = models.ForeignKey(Drink, related_name='Drink', on_delete=models.CASCADE)
