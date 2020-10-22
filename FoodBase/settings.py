@@ -1,6 +1,6 @@
 import os
 from redisify import redisify
-
+import redis
 from dotenv import load_dotenv
 from celery.schedules import crontab
 from FoodBase.celery import app
@@ -119,6 +119,9 @@ GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
 
 CACHES = redisify(default='redis://localhost:6379')
+
+
+BROKER_URL = os.getenv('REDISTOGO_URL', 'redis://localhost: 6379')
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
