@@ -1,5 +1,6 @@
 import os
 
+import redis as redis
 from dotenv import load_dotenv
 from celery.schedules import crontab
 from FoodBase.celery import app
@@ -116,12 +117,15 @@ STATIC_URL = "/static/"
 # Map settings
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
-CACHES = {
-    "default": {
-         "BACKEND": "redis_cache.RedisCache",
-         "LOCATION": os.environ.get('REDIS_PROVIDER'),
-    }
-}
+# CACHES = {
+#     "default": {
+#          "BACKEND": "redis_cache.RedisCache",
+#          "LOCATION": os.environ.get('REDIS_PROVIDER'),
+#     }
+# }
+
+REDIS_URL = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+REDIS = redis.from_url(REDIS_URL)
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
@@ -130,6 +134,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
 app.conf.enable_utc = False
+
 CELERY_BEAT_SCHEDULE = {
     'create_menu_of_day': {
          'task': 'menu.tasks.create_menu_of_day',
