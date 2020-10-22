@@ -117,7 +117,7 @@ STATIC_URL = "/static/"
 # Map settings
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 
-CACHES = redisify(default='redis://localhost')
+CACHES = redisify(default='redis://localhost:6379')
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
