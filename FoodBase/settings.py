@@ -134,6 +134,6 @@ app.conf.enable_utc = False
 CELERY_BEAT_SCHEDULE = {
     'create_menu_of_day': {
          'task': 'menu.tasks.create_menu_of_day',
-         'schedule': crontab(minute='5'),
+         'schedule': crontab(minute='*'),
         },
 }
