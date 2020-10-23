@@ -29,6 +29,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'django_better_admin_arrayfield',
+    'phonenumber_field',
 ]
 
 LOCAL_APPS = [
@@ -80,6 +81,11 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend'
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
