@@ -29,6 +29,9 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name_plural = 'Users'
+
     def __str__(self):
         return str(self.first_name) + ' ' + str(self.last_name)
 
@@ -37,6 +40,9 @@ class ResetKey(models.Model):
     user = models.ForeignKey(User, related_name='reset_key', on_delete=models.CASCADE)
     reset_key = models.CharField(max_length=40, default=generate_token)
 
+    class Meta:
+        verbose_name_plural = 'Reset key'
+
 
 class Employee(models.Model):
     user = models.ForeignKey(User, related_name='employees', on_delete=models.CASCADE)
@@ -44,3 +50,6 @@ class Employee(models.Model):
     department = models.CharField(max_length=100, choices=department_choices)
     started_from = models.DateField(auto_now_add=True)
     restaurant = models.ForeignKey(Restaurant, related_name='employees', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'Employees'
