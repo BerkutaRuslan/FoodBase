@@ -1,11 +1,12 @@
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from accounts.models import User
-from accounts.serializers import SignInRequestSerializer, UserPhoneSerializer
+from accounts.serializers import SignInRequestSerializer, UserPhoneSerializer, SignInVerifySerializer, \
+    UserFullSerializer
 from accounts.utils import send_sms_code
 
 
@@ -40,5 +41,27 @@ class SignInRequestView(APIView):
                 return Response(user_serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Message was not delivered to user"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SignInVerifyView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = SignInVerifySerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data, partial=True)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            if user.first_name != "":
+                is_new_user = False
+                user_serializer = UserFullSerializer(user)
+            else:
+                is_new_user = True
+                user_serializer = UserPhoneSerializer(user)
+
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key, 'is_new_user': is_new_user, 'user': user_serializer.data},
+                            status=status.HTTP_200_OK)
         else:
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
