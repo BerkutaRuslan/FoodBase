@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 from phonenumber_field.modelfields import PhoneNumberField
 
+from FoodBase import settings
 from FoodBase.utils import generate_token
 from restaurant.models import Restaurant
 
@@ -23,7 +24,7 @@ class User(AbstractUser):
     phone = PhoneNumberField(null=False, blank=False, unique=True, help_text="phone as username")
     passcode = models.CharField(max_length=4, null=True, blank=True)
     passcode_timer = models.DateTimeField(null=True)
-    photo = models.ImageField(upload_to='users')
+    photo = models.ImageField(upload_to='users', default=settings.USER_DEFAULT_IMAGE)
     address = models.CharField(max_length=250, blank=True)
     balance = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,4 +53,4 @@ class Employee(models.Model):
     restaurant = models.ForeignKey(Restaurant, related_name='employees', on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = 'Employees'
+        verbose_name_plural = 'Employee'
