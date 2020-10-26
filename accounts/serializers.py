@@ -9,6 +9,19 @@ class UserFullSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'email', 'phone', 'photo', 'address', 'balance']
 
+    def validate(self, attrs):
+        email = attrs.get('email', None)
+        try:
+            user = User.objects.get(email__exact=email)
+        except User.DoesNotExist:
+            return attrs  # update account
+        else:
+            if email == self.instance.email:
+                return attrs
+            else:
+                msg = {"email": 'This email is already used'}
+                raise exceptions.ValidationError(msg)
+
 
 class UserPhoneSerializer(serializers.ModelSerializer):
     class Meta:
