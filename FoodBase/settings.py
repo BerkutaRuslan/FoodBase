@@ -29,7 +29,9 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
+    'rest_framework.authtoken',
     'django_better_admin_arrayfield',
+    'phonenumber_field',
 ]
 
 LOCAL_APPS = [
@@ -71,6 +73,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FoodBase.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -81,6 +95,11 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend'
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -137,3 +156,16 @@ CELERY_BEAT_SCHEDULE = {
          'schedule': crontab(minute='*'),
         },
 }
+
+# Twilio
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'UA'  # Ukraine
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
+
+
+DISH_DEFAULT_IMAGE = 'dish/default.png'
+DRINK_DEFAULT_IMAGE = 'drinks/default.png'
+USER_DEFAULT_IMAGE = 'users/default.png'
+NEWS_DEFAULT_IMAGE = 'news/default.png'
