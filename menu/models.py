@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from django.db import models
 
+from FoodBase import settings
+
 
 def get_expire_date():
     return datetime.today() + timedelta(days=1)
@@ -31,7 +33,7 @@ class Dish(models.Model):
     calories = models.IntegerField()
     weight = models.FloatField()
     category = models.CharField(choices=category_choice, max_length=100)
-    photo = models.ImageField(upload_to='dish')
+    photo = models.ImageField(upload_to='dish', default=settings.DISH_DEFAULT_IMAGE)
 
     def __str__(self):
         return self.name
@@ -42,7 +44,7 @@ class Dish(models.Model):
 
 class Drink(models.Model):
     name = models.CharField(max_length=150)
-    photo = models.ImageField(upload_to='drinks')
+    photo = models.ImageField(upload_to='drinks', default=settings.DRINK_DEFAULT_IMAGE)
     bottle_volume = models.CharField(max_length=150, choices=volume_choice)
     price = models.FloatField()
 

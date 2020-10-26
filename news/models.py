@@ -1,9 +1,11 @@
 from django.db import models
 
+from FoodBase import settings
+
 
 class News(models.Model):
     title = models.CharField(max_length=128)
-    photo = models.ImageField(upload_to='news')
+    photo = models.ImageField(upload_to='news', default=settings.DEFAULT_NEWS_IMAGE)
     description = models.TextField(max_length=2000)
     creation_date = models.DateTimeField(auto_now=True)
 
