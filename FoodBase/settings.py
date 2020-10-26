@@ -160,3 +160,4 @@ TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
 DISH_DEFAULT_IMAGE = 'dish/default.png'
 DRINK_DEFAULT_IMAGE = 'drinks/default.png'
 USER_DEFAULT_IMAGE = 'users/default.png'
+NEWS_DEFAULT_IMAGE = 'news/default.png'
