@@ -29,6 +29,12 @@ class UserPhoneSerializer(serializers.ModelSerializer):
         fields = ('id', 'phone', 'passcode')
 
 
+class UserPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['photo']
+
+
 class SignInRequestSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
 

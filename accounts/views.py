@@ -2,12 +2,13 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
 from accounts.serializers import SignInRequestSerializer, UserPhoneSerializer, SignInVerifySerializer, \
-    UserFullSerializer
+    UserFullSerializer, UserPhotoSerializer
 from accounts.utils import send_sms_code
 
 
@@ -82,3 +83,19 @@ class UserProfileView(APIView):
             return Response(UserFullSerializer(user).data, status=status.HTTP_200_OK)
         else:
             raise ValidationError(serializer.errors)
+
+
+class UpdatePhotoView(APIView):
+    permission_classes = (IsAuthenticated,)
+    parser_classes = [MultiPartParser]
+
+    def put(self, request):
+        photo_obj = request.data['file']
+        user = request.user
+        try:
+            user.photo = photo_obj
+            user.save()
+        except:
+            return Response({'error': 'something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(UserPhotoSerializer(user).data, status=status.HTTP_200_OK)
