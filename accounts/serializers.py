@@ -104,3 +104,19 @@ class SignInVerifySerializer(serializers.Serializer):
         else:
             msg = 'Must provide phonenumber in international format.'
             raise exceptions.ValidationError(msg)
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            attrs['user'] = user
+            return attrs
+        else:
+            msg = {"email": "There is no account with this email"}
+            raise exceptions.ValidationError(msg)
+
