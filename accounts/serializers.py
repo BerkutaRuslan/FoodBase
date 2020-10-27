@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from phonenumbers import is_valid_number, parse as phonenumbers_parse
 from rest_framework import serializers, exceptions
 
@@ -103,4 +104,35 @@ class SignInVerifySerializer(serializers.Serializer):
                 raise exceptions.ValidationError(msg)
         else:
             msg = 'Must provide phonenumber in international format.'
+            raise exceptions.ValidationError(msg)
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            attrs['user'] = user
+            return attrs
+        else:
+            msg = {"email": "There is no account with this email"}
+            raise exceptions.ValidationError(msg)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        confirm_password = attrs.get('confirm_password')
+
+        if password == confirm_password:
+            validate_password(password)
+            return password
+        else:
+            msg = {"password": "Passwords did not match"}
             raise exceptions.ValidationError(msg)

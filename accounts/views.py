@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -6,9 +7,11 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
-
+from FoodBase import settings
+from FoodBase.utils import send_email
+from accounts.models import ResetKey
 from accounts.serializers import SignInRequestSerializer, UserPhoneSerializer, SignInVerifySerializer, \
-    UserFullSerializer, UserPhotoSerializer
+    UserFullSerializer, UserPhotoSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
 from accounts.utils import send_sms_code
 
 
@@ -99,3 +102,40 @@ class UpdatePhotoView(APIView):
             return Response({'error': 'something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(UserPhotoSerializer(user).data, status=status.HTTP_200_OK)
+
+
+class ForgotPasswordView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = ForgotPasswordSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.validated_data['user']
+            reset_key = ResetKey.objects.create(user=user)
+            reset_key.save()
+
+            reset_password_url = f'{settings.HOST}/accounts/reset-password?key={reset_key.reset_key}'
+            send_email(subject="Reset Password", user=user.email, template='reset-password.html',
+                       from_email=settings.EMAIL_FROM_SENDER,
+                       content={'user_name': f'{user.first_name} {user.last_name}', 'reset_url': reset_password_url})
+            return Response({'message': 'Reset link was sent successfully, check your mail box',
+                            'reset_key': reset_key.reset_key}, status=status.HTTP_200_OK)
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = ResetPasswordSerializer
+
+    def put(self, request):
+        reset_key = request.query_params['key']
+        reset_key_obj = get_object_or_404(ResetKey, reset_key=reset_key)
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = reset_key_obj.user
+            user.set_password(serializer.validated_data)
+            user.save()
+
+            # delete ResetKey instance
+            reset_key_obj.delete()
+            return Response({'message': 'Your password has been reset'}, status=status.HTTP_200_OK)
