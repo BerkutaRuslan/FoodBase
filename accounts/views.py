@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -10,7 +11,7 @@ from FoodBase import settings
 from FoodBase.utils import send_email
 from accounts.models import ResetKey
 from accounts.serializers import SignInRequestSerializer, UserPhoneSerializer, SignInVerifySerializer, \
-    UserFullSerializer, UserPhotoSerializer, ForgotPasswordSerializer
+    UserFullSerializer, UserPhotoSerializer, ForgotPasswordSerializer, ResetPasswordSerializer
 from accounts.utils import send_sms_code
 
 
@@ -120,3 +121,21 @@ class ForgotPasswordView(APIView):
                        content={'user_name': f'{user.first_name} {user.last_name}', 'reset_url': reset_password_url})
             return Response({'message': 'Reset link was sent successfully, check your mail box',
                             'reset_key': reset_key.reset_key}, status=status.HTTP_200_OK)
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = ResetPasswordSerializer
+
+    def put(self, request):
+        reset_key = request.query_params['key']
+        reset_key_obj = get_object_or_404(ResetKey, reset_key=reset_key)
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = reset_key_obj.user
+            user.set_password(serializer.validated_data)
+            user.save()
+
+            # delete ResetKey instance
+            reset_key_obj.delete()
+            return Response({'message': 'Your password has been reset'}, status=status.HTTP_200_OK)
