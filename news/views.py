@@ -1,6 +1,3 @@
-from django.http import HttpResponse
-import os
-from FoodBase.settings import HOST
 from rest_framework import status, generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -30,4 +27,3 @@ class GetRandomNewsView(APIView):
                          "description": random_news.description,
                          "creation_date": random_news.creation_date.isoformat(' ', 'seconds'),
                          "photo": f'/media/{random_news.photo}'}, status=status.HTTP_200_OK)
-
