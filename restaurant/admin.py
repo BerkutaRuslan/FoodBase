@@ -11,7 +11,8 @@ class RestaurantAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     fieldsets = (
         (None, {
-            'fields': ('name', 'work_from', 'work_to', 'description', 'latitude', 'longitude',)
+            'fields': ('name', 'work_from', 'work_to', 'description', 'days_to_review_employee_salary',
+                       'latitude', 'longitude')
         }),
     )
 

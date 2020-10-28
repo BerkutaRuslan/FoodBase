@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 from twilio.rest import Client
 
@@ -23,3 +24,9 @@ def send_sms_code(user_phone):
         return None
     else:
         return code
+
+
+def update_review_date(employee):
+    employee.review_date = datetime.today().date()
+    employee.save()
+    return employee

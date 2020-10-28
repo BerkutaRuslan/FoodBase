@@ -51,6 +51,7 @@ class Employee(models.Model):
     department = models.CharField(max_length=100, choices=department_choices)
     started_from = models.DateField(auto_now_add=True)
     restaurant = models.ForeignKey(Restaurant, related_name='employees', on_delete=models.CASCADE)
+    review_date = models.DateField(auto_now_add=True, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Employee'

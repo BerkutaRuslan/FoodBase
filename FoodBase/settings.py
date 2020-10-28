@@ -143,6 +143,10 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
 app.conf.enable_utc = False
 CELERY_BEAT_SCHEDULE = {
+    'employee_salary_review':{
+        'task': 'accounts.tasks.employee_salary_review',
+        'schedule': crontab(minute='*')
+    },
     'create_menu_of_day': {
          'task': 'menu.tasks.create_menu_of_day',
          'schedule': crontab(minute='*'),
