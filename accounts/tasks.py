@@ -1,12 +1,9 @@
 from datetime import datetime, timedelta
 from celery import shared_task
-import random
-
 from FoodBase import settings
 from FoodBase.utils import send_email
 from accounts.models import Employee
 from accounts.utils import update_review_date
-from menu.models import MenuOfDay
 from restaurant.models import Restaurant
 
 
