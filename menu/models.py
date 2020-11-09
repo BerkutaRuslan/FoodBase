@@ -74,7 +74,6 @@ class MenuOfDay(models.Model):
 class CartItem(models.Model):
     product_type = models.CharField(max_length=200, choices=product_type_choice)
     product_id = models.IntegerField()
-    user = models.ForeignKey(User, related_name='cart', on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.product_type) + ', ' + str(self.product_id)
