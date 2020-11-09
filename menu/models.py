@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.db import models
 
 from FoodBase import settings
+from accounts.models import User
 
 
 def get_expire_date():
@@ -16,6 +17,11 @@ category_choice = (
     ('first meal', 'first meal'),
     ('second meal', 'second meal'),
     ('dessert', 'dessert'),
+)
+
+product_type_choice = (
+    ('drink', 'drink'),
+    ('dish', 'dish'),
 )
 
 volume_choice = (
@@ -63,3 +69,12 @@ class MenuOfDay(models.Model):
 
     class Meta:
         verbose_name_plural = 'Menu of day'
+
+
+class CartItem(models.Model):
+    product_type = models.CharField(max_length=200, choices=product_type_choice)
+    product_id = models.IntegerField()
+    user = models.ForeignKey(User, related_name='cart', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.product_type) + ', ' + str(self.product_id)
