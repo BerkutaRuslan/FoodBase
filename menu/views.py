@@ -1,8 +1,11 @@
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from cart.cart import Cart
 
 from menu.models import Drink, Dish, MenuOfDay
-from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer
+from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer, CartAddSerializer
 
 
 class ListAllDrinksView(generics.ListAPIView):
@@ -61,3 +64,21 @@ class ListAllDishesView(generics.ListAPIView):
         if sort_max_min:
             dishes = dishes.order_by('-price')
         return dishes
+
+
+class CardAddView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CartAddSerializer
+
+    def post(self, request):
+        cart = Cart(request)
+        serializer = self.serializer_class(data=request.data, partial=True)
+        if serializer.is_valid():
+            product_id, product_type = serializer.validated_data.pop('product_id'),\
+                                       serializer.validated_data.pop('product_type')
+            product = serializer.save()
+            cart.add(product=product)
+            print(cart)
+            return Response({'message': 'Product was added to your cart!'}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

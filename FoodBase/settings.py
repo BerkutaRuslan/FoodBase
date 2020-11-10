@@ -31,6 +31,7 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'django_better_admin_arrayfield',
     'phonenumber_field',
+    'cart',
 ]
 
 LOCAL_APPS = [
@@ -143,7 +144,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
 app.conf.enable_utc = False
 CELERY_BEAT_SCHEDULE = {
-    'employee_salary_review':{
+    'employee_salary_review': {
         'task': 'accounts.tasks.employee_salary_review',
         'schedule': crontab(minute='*')
     },
@@ -172,3 +173,5 @@ DISH_DEFAULT_IMAGE = 'dish/default.png'
 DRINK_DEFAULT_IMAGE = 'drinks/default.png'
 USER_DEFAULT_IMAGE = 'users/default.png'
 NEWS_DEFAULT_IMAGE = 'news/default.png'
+
+CART_SESSION_ID = 'cart'
