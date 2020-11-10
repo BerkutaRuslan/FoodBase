@@ -71,9 +71,10 @@ class MenuOfDay(models.Model):
         verbose_name_plural = 'Menu of day'
 
 
-class CartItem(models.Model):
-    product_type = models.CharField(max_length=200, choices=product_type_choice)
-    product_id = models.IntegerField()
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='products')
+    price = models.FloatField()
 
     def __str__(self):
-        return str(self.product_type) + ', ' + str(self.product_id)
+        return str(self.name) + ', ' + str(self.price)
