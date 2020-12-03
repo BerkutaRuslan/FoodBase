@@ -33,7 +33,8 @@ class CartAddSerializer(serializers.Serializer):
     quantity = serializers.CharField(required=True)
 
     def create(self, validated_data):
-        return Product.objects.create(**validated_data)
+        product, created = Product.objects.get_or_create(**validated_data)
+        return product
 
     def validate(self, attrs):
         product_type, product_id = attrs['product_type'], attrs['product_id']
