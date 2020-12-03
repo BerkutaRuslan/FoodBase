@@ -1,10 +1,11 @@
+from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from cart.cart import Cart
 
-from menu.models import Drink, Dish, MenuOfDay
+
+from menu.models import Drink, Dish, MenuOfDay, Cart
 from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer, CartAddSerializer
 
 
@@ -71,14 +72,12 @@ class CardAddView(APIView):
     serializer_class = CartAddSerializer
 
     def post(self, request):
-        cart = Cart(request)
         serializer = self.serializer_class(data=request.data, partial=True)
         if serializer.is_valid():
-            product_id, product_type = serializer.validated_data.pop('product_id'),\
-                                       serializer.validated_data.pop('product_type')
+            serializer.validated_data.pop('product_id'), serializer.validated_data.pop('product_type')
+            quantity = serializer.validated_data.pop('quantity')
             product = serializer.save()
-            cart.add(product=product)
-            print(cart)
+            cart, _ = Cart.objects.get_or_create(user=request.user, product=product, quantity=quantity)
             return Response({'message': 'Product was added to your cart!'}, status=status.HTTP_200_OK)
         else:
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

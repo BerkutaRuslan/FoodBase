@@ -30,6 +30,7 @@ class MenuOfDaySerializer(serializers.ModelSerializer):
 class CartAddSerializer(serializers.Serializer):
     product_type = serializers.CharField(required=True)
     product_id = serializers.CharField(required=True)
+    quantity = serializers.CharField(required=True)
 
     def create(self, validated_data):
         return Product.objects.create(**validated_data)
