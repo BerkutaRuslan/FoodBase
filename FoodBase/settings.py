@@ -31,7 +31,6 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'django_better_admin_arrayfield',
     'phonenumber_field',
-    'cart',
 ]
 
 LOCAL_APPS = [
@@ -173,5 +172,3 @@ DISH_DEFAULT_IMAGE = 'dish/default.png'
 DRINK_DEFAULT_IMAGE = 'drinks/default.png'
 USER_DEFAULT_IMAGE = 'users/default.png'
 NEWS_DEFAULT_IMAGE = 'news/default.png'
-
-CART_SESSION_ID = 'cart'
