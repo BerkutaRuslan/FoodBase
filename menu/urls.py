@@ -1,7 +1,7 @@
 from django.urls import path
 
 from menu.views import ListAllDrinksView, GetDrinkByIdView, GetDishByIdView, GetMenuOfDayMealView, ListAllDishesView, \
-    CardAddView
+    CardAddView, CartDetailView
 
 urlpatterns = [
     path('drinks', ListAllDrinksView.as_view(), name='drinks'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('dish/<int:pk>', GetDishByIdView.as_view()),
     path('special-proposition', GetMenuOfDayMealView.as_view()),
     path('cart/add/', CardAddView.as_view(), name='cart_add'),
+    path('cart/detail', CartDetailView.as_view()),
 ]
