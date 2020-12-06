@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 
 from menu.models import Drink, Dish, MenuOfDay, Cart
-from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer, CartAddSerializer
+from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer, CartAddSerializer, CartSerializer
 
 
 class ListAllDrinksView(generics.ListAPIView):
@@ -81,3 +81,17 @@ class CardAddView(APIView):
             return Response({'message': 'Product was added to your cart!'}, status=status.HTTP_200_OK)
         else:
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CartDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CartSerializer
+
+    def get(self, request):
+        serializer = self.serializer_class
+        cart = Cart.objects.filter(user=request.user)
+        data = serializer(cart, many=True).data
+        total_price = 0
+        for item in data:
+            total_price = total_price + item['total_amount']
+        return Response({"Items in your cart:": data, "total_price": total_price}, status=status.HTTP_200_OK)

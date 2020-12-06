@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from menu.models import Drink, Dish, MenuOfDay, Product
+from menu.models import Drink, Dish, MenuOfDay, Product, Cart
 
 
 class DrinkSerializer(serializers.ModelSerializer):
@@ -57,3 +57,23 @@ class CartAddSerializer(serializers.Serializer):
             msg = "Unfortunately, we don't have that product in our menu"
             raise ValidationError(msg)
 
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['name', 'price', 'image']
+
+
+class CartSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(many=False, read_only=True)
+    total_amount = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Cart
+        fields = ['product', 'quantity', 'total_amount']
+
+    def get_total_amount(self, obj):
+        total_amount = 0
+        product_quantity = obj.quantity
+        total_amount = total_amount + obj.product.price * product_quantity
+        return total_amount
