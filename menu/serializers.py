@@ -61,7 +61,7 @@ class CartAddSerializer(serializers.Serializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'price', 'image']
+        fields = ['id', 'name', 'price', 'image']
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -77,3 +77,21 @@ class CartSerializer(serializers.ModelSerializer):
         product_quantity = obj.quantity
         total_amount = total_amount + obj.product.price * product_quantity
         return total_amount
+
+
+class UpdateCartSerializer(serializers.Serializer):
+    quantity = serializers.CharField(required=True)
+    product_id = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        quantity = attrs['quantity']
+        product_id = attrs['product_id']
+        if int(quantity) >= 1:
+            if Cart.objects.get(user=self.instance, product_id=product_id):
+                return attrs
+            else:
+                msg = "Product with that id does not exists"
+                return ValidationError(msg)
+        else:
+            msg = "Quantity can be 1 or greater"
+            return ValidationError(msg)

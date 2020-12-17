@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 
 
 from menu.models import Drink, Dish, MenuOfDay, Cart
-from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer, CartAddSerializer, CartSerializer
+from menu.serializers import DrinkSerializer, DishSerializer, MenuOfDaySerializer, CartAddSerializer, CartSerializer, \
+    UpdateCartSerializer
 
 
 class ListAllDrinksView(generics.ListAPIView):
@@ -95,3 +96,16 @@ class CartDetailView(APIView):
         for item in data:
             total_price = total_price + item['total_amount']
         return Response({"Items in your cart:": data, "total_price": total_price}, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        serializer = UpdateCartSerializer(data=request.data, instance=request.user, partial=True)
+        if serializer.is_valid():
+            cart_product = Cart.objects.get(user=request.user, product=serializer.validated_data['product_id'])
+            cart_product.quantity = serializer.validated_data['quantity']
+            cart_product.save()
+            return Response({"message": "Your cart has been updated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
