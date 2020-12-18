@@ -107,5 +107,16 @@ class CartDetailView(APIView):
         else:
             return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
+    def delete(self, request):
+        try:
+            product_id = request.data['product_id']
+            cart = Cart.objects.filter(user=request.user, product_id=product_id)
+            if product_id and cart:
+                cart.delete()
+                return Response({"message": "Product was successfully deleted from your cart"},
+                                status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "You don't have that product in your cart"})
+        except KeyError:
+            return Response({"message": "Something went wrong, probably you don't have that product in your cart"},
+                            status=status.HTTP_400_BAD_REQUEST)
